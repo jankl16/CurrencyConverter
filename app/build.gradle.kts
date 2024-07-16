@@ -53,7 +53,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature-converting"))
+    implementation(project(":feature:converting"))
     implementation(project(":theme"))
 
     implementation(libs.androidx.core.ktx)

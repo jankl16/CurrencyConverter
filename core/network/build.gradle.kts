@@ -1,10 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
 }
 
 android {
-    namespace = "com.kaleiczyk.domain"
+    namespace = "com.kaleiczyk.network"
     compileSdk = 34
 
     defaultConfig {
@@ -33,11 +36,18 @@ android {
 }
 
 dependencies {
-    implementation(project(":model"))
-    implementation(project(":network"))
-
-    implementation(libs.dagger.hilt.android)
+    implementation(project(":core:model"))
 
     implementation(libs.androidx.core.ktx)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
+
     testImplementation(libs.junit)
 }
