@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="currency_converting_form_from_title">Sending From</string>
+    <string name="currency_converting_form_to_title">Receiver gets</string>
+</resources>

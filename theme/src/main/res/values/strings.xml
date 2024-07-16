@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="poland">Poland</string>
+    <string name="germany">Germany</string>
+    <string name="great_britain">Great Britain</string>
+    <string name="ukraine">Ukraine</string>
+    <string name="pln_title">Polish zloty</string>
+    <string name="pln_abbreviation">PLN</string>
+    <string name="eur_title">Euro</string>
+    <string name="eur_abbreviation">EUR</string>
+    <string name="gbp_title">British Pound</string>
+    <string name="gbp_abbreviation">GBP</string>
+    <string name="uah_title">Hrivna</string>
+    <string name="uah_abbreviation">UAH</string>
+</resources>
