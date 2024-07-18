@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="country_selector_receiving_from_title">Receiving from</string>
+    <string name="country_selector_sending_to_title">Sending to</string>
+    <string name="country_selector_text_field_label_title">Search</string>
+    <string name="country_selector_countries_list_title">Countries</string>
+</resources>

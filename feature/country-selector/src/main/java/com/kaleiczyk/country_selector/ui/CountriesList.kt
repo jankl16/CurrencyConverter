@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kaleiczyk.country_selector.R
 import com.kaleiczyk.theme.CurrencyConverterTheme
 import com.kaleiczyk.theme.LightGrey
 import com.kaleiczyk.theme.LightGreyText
@@ -46,7 +47,7 @@ internal fun CountriesList(
     Column {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Countries", // TODO: USE STRING RESOURCE
+            text = stringResource(id = R.string.country_selector_countries_list_title),
             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.W700)
         )
         Spacer(modifier = Modifier.height(12.dp))
