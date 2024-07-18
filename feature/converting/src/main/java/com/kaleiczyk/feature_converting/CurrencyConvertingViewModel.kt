@@ -3,12 +3,13 @@ package com.kaleiczyk.feature_converting
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kaleiczyk.country_selector.CountrySelectorType
 import com.kaleiczyk.domain.ConvertCurrencyUseCase
 import com.kaleiczyk.domain.Result
-import com.kaleiczyk.feature_converting.model.CountryTile
-import com.kaleiczyk.feature_converting.model.toCurrency
 import com.kaleiczyk.model.utils.isValidAmount
 import com.kaleiczyk.model.utils.roundToTwoDecimals
+import com.kaleiczyk.theme.model.CountryTile
+import com.kaleiczyk.theme.model.toCurrency
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,17 +20,18 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @Immutable
-data class State(
+internal data class State(
     val from: CountryTile = CountryTile.POLAND,
     val to: CountryTile = CountryTile.UKRAINE,
     val fromAmount: Double = INITIAL_FROM_AMOUNT,
     val toAmount: Double? = null,
     val convertingRate: Double? = null,
     val errorMessage: String? = null,
+    val bottomSheetCountrySelectorType: CountrySelectorType? = null,
 )
 
 @HiltViewModel
-class ConvertingCurrencyViewModel @Inject constructor(
+internal class CurrencyConvertingViewModel @Inject constructor(
     private val currencyConverterUseCase: ConvertCurrencyUseCase
 ) : ViewModel() {
 
@@ -40,10 +42,8 @@ class ConvertingCurrencyViewModel @Inject constructor(
         sendConvertRequest()
     }
 
-    fun onSwapTapAction() {
-        with(state.value) {
-            sendConvertRequest(from = to, to = from)
-        }
+    fun onSwapTapAction() = with(state.value) {
+        sendConvertRequest(from = to, to = from)
     }
 
     fun onFromAmountChanged(amount: String) {
@@ -73,6 +73,18 @@ class ConvertingCurrencyViewModel @Inject constructor(
         sendConvertRequest(from = fromCountry, to = country)
     }
 
+    fun onSelectFromCountryTapAction() {
+        _state.update { it.copy(bottomSheetCountrySelectorType = CountrySelectorType.SELECT_SENDER) }
+    }
+
+    fun onSelectToCountryTapAction() {
+        _state.update { it.copy(bottomSheetCountrySelectorType = CountrySelectorType.SELECT_RECEIVER) }
+    }
+
+    fun onDismissBottomSheet() {
+        _state.update { it.copy(bottomSheetCountrySelectorType = null) }
+    }
+
     private fun sendConvertRequest(
         from: CountryTile = state.value.from,
         to: CountryTile = state.value.to
@@ -93,7 +105,8 @@ class ConvertingCurrencyViewModel @Inject constructor(
             when (result) {
                 is Result.Success -> it.copy(
                     toAmount = result.data.amount,
-                    convertingRate = result.data.rate
+                    convertingRate = result.data.rate,
+                    errorMessage = null
                 )
 
                 is Result.Error -> it.copy(errorMessage = result.message)

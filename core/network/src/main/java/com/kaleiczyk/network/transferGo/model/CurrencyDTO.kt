@@ -14,6 +14,6 @@ enum class CurrencyDTO {
     @SerialName("uah")
     UAH,
 
-    @SerialName("gbr")
-    GBR,
+    @SerialName("gbp")
+    GBP,
 }

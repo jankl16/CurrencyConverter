@@ -1,4 +1,4 @@
-package com.kaleiczyk.feature_converting.model
+package com.kaleiczyk.theme.model
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable

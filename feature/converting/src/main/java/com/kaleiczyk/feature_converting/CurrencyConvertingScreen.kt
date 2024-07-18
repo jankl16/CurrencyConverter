@@ -12,55 +12,98 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kaleiczyk.feature_converting.model.CountryTile
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kaleiczyk.country_selector.CountrySelectorBottomSheet
+import com.kaleiczyk.country_selector.CountrySelectorType
 import com.kaleiczyk.feature_converting.ui.CurrencyConvertingForm
+import com.kaleiczyk.theme.CurrencyConverterTheme
 import com.kaleiczyk.theme.Error
 import com.kaleiczyk.theme.ErrorBackground
+import com.kaleiczyk.theme.White
+import com.kaleiczyk.theme.model.CountryTile
+import kotlinx.coroutines.launch
 
 
-// RENAME
 @Composable
-fun CurrencyConvertingScreen(viewModel: ConvertingCurrencyViewModel) {
+fun CurrencyConvertingScreen() {
+    val viewModel = viewModel<CurrencyConvertingViewModel>()
     val state = viewModel.state.collectAsState()
 
-    CurrencyConvertingScreen(
-        from = state.value.from,
-        to = state.value.to,
-        fromAmount = state.value.fromAmount,
-        onFromAmountChanged = viewModel::onFromAmountChanged,
-        toAmount = state.value.toAmount,
-        rate = state.value.convertingRate,
-        onFromCountryTapAction = {},
-        onToCountryTapAction = {},
-        onSwapTapAction = viewModel::onSwapTapAction
-    )
+    with(state.value) {
+        CurrencyConvertingScreen(
+            errorMessage = errorMessage,
+            bottomSheetCountrySelectorType = bottomSheetCountrySelectorType,
+            from = state.value.from,
+            to = state.value.to,
+            fromAmount = state.value.fromAmount,
+            onFromAmountChanged = viewModel::onFromAmountChanged,
+            toAmount = state.value.toAmount,
+            rate = state.value.convertingRate,
+            onFromCountryTapAction = viewModel::onFromCountryChanged,
+            onToCountryTapAction = viewModel::onToCountryChanged,
+            onSelectFromCountryTapAction = viewModel::onSelectFromCountryTapAction,
+            onSelectToCountryTapAction = viewModel::onSelectToCountryTapAction,
+            onDismissBottomSheet = viewModel::onDismissBottomSheet,
+            onSwapTapAction = viewModel::onSwapTapAction
+        )
+    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CurrencyConvertingScreen(
-    errorMessage: String? = null,
+    errorMessage: String?,
+    bottomSheetCountrySelectorType: CountrySelectorType?,
     from: CountryTile,
     to: CountryTile,
     fromAmount: Double,
     onFromAmountChanged: (String) -> Unit,
     toAmount: Double?,
     rate: Double?,
-    onFromCountryTapAction: () -> Unit,
-    onToCountryTapAction: () -> Unit,
-    onSwapTapAction: () -> Unit
+    onFromCountryTapAction: (CountryTile) -> Unit,
+    onToCountryTapAction: (CountryTile) -> Unit,
+    onSwapTapAction: () -> Unit,
+    onSelectFromCountryTapAction: () -> Unit,
+    onSelectToCountryTapAction: () -> Unit,
+    onDismissBottomSheet: () -> Unit,
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
+
+    if (bottomSheetCountrySelectorType != null) {
+        ModalBottomSheet(
+            onDismissRequest = onDismissBottomSheet,
+            sheetState = sheetState,
+            containerColor = White,
+        ) {
+            CountrySelectorBottomSheet(bottomSheetCountrySelectorType) {
+                when (bottomSheetCountrySelectorType) {
+                    CountrySelectorType.SELECT_SENDER -> onFromCountryTapAction(it)
+                    CountrySelectorType.SELECT_RECEIVER -> onToCountryTapAction(it)
+                }
+                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                    onDismissBottomSheet()
+                }
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -80,8 +123,8 @@ private fun CurrencyConvertingScreen(
                 toAmount = toAmount,
                 rate = rate,
                 onSwapTapAction = onSwapTapAction,
-                onFromCountryTapAction = onFromCountryTapAction,
-                onToCountryTapAction = onToCountryTapAction,
+                onFromCountryTapAction = onSelectFromCountryTapAction,
+                onToCountryTapAction = onSelectToCountryTapAction,
                 onFromAmountChanged = onFromAmountChanged,
                 isError = errorMessage != null,
             )
@@ -129,6 +172,8 @@ fun SenderScreenPreview() {
         Scaffold { padding ->
             Box(modifier = Modifier.padding(padding)) {
                 CurrencyConvertingScreen(
+                    errorMessage = null,
+                    bottomSheetCountrySelectorType = null,
                     from = CountryTile.POLAND,
                     to = CountryTile.UKRAINE,
                     fromAmount = 100.0,
@@ -137,7 +182,10 @@ fun SenderScreenPreview() {
                     onSwapTapAction = {},
                     onFromCountryTapAction = {},
                     onFromAmountChanged = {},
-                    onToCountryTapAction = {}
+                    onToCountryTapAction = {},
+                    onSelectFromCountryTapAction = {},
+                    onSelectToCountryTapAction = {},
+                    onDismissBottomSheet = {}
                 )
             }
         }
@@ -147,11 +195,12 @@ fun SenderScreenPreview() {
 @Preview
 @Composable
 fun SenderScreenWithErrorPreview() {
-    MaterialTheme {
+    CurrencyConverterTheme {
         Scaffold { padding ->
             Box(modifier = Modifier.padding(padding)) {
                 CurrencyConvertingScreen(
                     errorMessage = "Maximum sending amount: 20 000 UAH",
+                    bottomSheetCountrySelectorType = null,
                     from = CountryTile.POLAND,
                     to = CountryTile.UKRAINE,
                     fromAmount = 100000.0,
@@ -160,7 +209,10 @@ fun SenderScreenWithErrorPreview() {
                     onSwapTapAction = {},
                     onFromCountryTapAction = {},
                     onFromAmountChanged = {},
-                    onToCountryTapAction = {}
+                    onToCountryTapAction = {},
+                    onSelectFromCountryTapAction = {},
+                    onSelectToCountryTapAction = {},
+                    onDismissBottomSheet = {}
                 )
             }
         }

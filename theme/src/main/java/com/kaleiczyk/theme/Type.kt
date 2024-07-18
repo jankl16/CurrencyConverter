@@ -1,12 +1,9 @@
-package com.kaleiczyk.currencyconverter.ui.theme
+package com.kaleiczyk.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.kaleiczyk.theme.DefaultFont
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -34,6 +31,12 @@ val Typography = Typography(
         fontSize = 32.sp,
         lineHeight = 40.sp,
         letterSpacing = (-0.4).sp
+    ),
+    headlineMedium  = TextStyle(
+        fontFamily = DefaultFont,
+        fontWeight = FontWeight.W700,
+        fontSize = 24.sp,
+        lineHeight = 36.sp,
     ),
     /* Other default text styles to override
     titleLarge = TextStyle(

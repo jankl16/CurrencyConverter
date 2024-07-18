@@ -13,7 +13,7 @@ sealed class RequestResult<T>(val code: Int) {
         class Global<T>(
             message: String,
             code: Int,
-            exception: Exception?,
+            exception: Exception? = null,
         ) : Error<T>(code, message, exception = exception)
 
         class ServerError<T>(
@@ -24,7 +24,7 @@ sealed class RequestResult<T>(val code: Int) {
         class LocalError<T>(
             message: String,
             code: Int,
-            exception: Exception?,
+            exception: Exception? = null,
         ) : Error<T>(code, message, exception)
 
         class Network<T> : Error<T>(code = -1, message = "", exception = null)

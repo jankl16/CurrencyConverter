@@ -13,8 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kaleiczyk.currencyconverter.ui.theme.CurrencyConverterTheme
+import com.kaleiczyk.theme.CurrencyConverterTheme
 import com.kaleiczyk.feature_converting.CurrencyConvertingScreen
 import com.kaleiczyk.theme.White
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +31,7 @@ class MainActivity : ComponentActivity() {
                         .background(White)
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        CurrencyConvertingScreen(viewModel = viewModel())
+                        CurrencyConvertingScreen()
                     }
                 }
             }

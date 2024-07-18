@@ -36,6 +36,7 @@ inline fun <T> sendRetrofitRequest(request: () -> Response<T>): RequestResult<T>
                     body,
                     code()
                 )
+                code() in 400..499 -> RequestResult.Error.LocalError(message(), code())
 
                 code() in 500..599 -> RequestResult.Error.ServerError(
                     message(),

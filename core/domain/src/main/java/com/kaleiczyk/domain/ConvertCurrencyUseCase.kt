@@ -34,7 +34,7 @@ class ConvertCurrencyUseCase @Inject constructor(
         val maxAmountLimit = currency.getMaxAmountLimit()
         return when {
             amount <= 0 -> "Minimum sending amount is: $MIN_AMOUNT ${currency.code.uppercase()}"
-            amount > maxAmountLimit -> "Maximum sending amount: $amount ${currency.code.uppercase()}"
+            amount > maxAmountLimit -> "Maximum sending amount: $maxAmountLimit ${currency.code.uppercase()}"
             else -> null
         }
     }

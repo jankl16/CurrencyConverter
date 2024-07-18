@@ -1,7 +1,7 @@
 package com.kaleiczyk.model
 
 enum class Country(
-    private val currency: Currency
+    val currency: Currency
 ) {
     POLAND(Currency.PLN),
     GERMANY(Currency.EUR),

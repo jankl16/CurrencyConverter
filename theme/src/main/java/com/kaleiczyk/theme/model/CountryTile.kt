@@ -1,4 +1,4 @@
-package com.kaleiczyk.feature_converting.model
+package com.kaleiczyk.theme.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -18,9 +18,9 @@ enum class CountryTile(
     UKRAINE(R.string.ukraine, CurrencyTile.UAH, R.drawable.ic_ukraine),
 }
 
-fun CountryTile.toCountry() = when (this) {
-    CountryTile.POLAND -> Country.POLAND
-    CountryTile.GERMANY -> Country.GERMANY
-    CountryTile.GREAT_BRITAIN -> Country.GREAT_BRITAIN
-    CountryTile.UKRAINE -> Country.UKRAINE
+fun Country.toCountryTile() = when (this) {
+    Country.POLAND -> CountryTile.POLAND
+    Country.GERMANY -> CountryTile.GERMANY
+    Country.GREAT_BRITAIN -> CountryTile.GREAT_BRITAIN
+    Country.UKRAINE -> CountryTile.UKRAINE
 }

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.kaleiczyk.feature_converting"
+    namespace = "com.kaleiczyk.country_selector"
     compileSdk = 34
 
     defaultConfig {
@@ -41,7 +41,6 @@ dependencies {
     implementation(project(":theme"))
     implementation(project(":core:model"))
     implementation(project(":core:domain"))
-    implementation(project(":feature:country-selector"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -57,7 +56,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.compose.runtime)
 
-    implementation (libs.androidx.constraintLayout)
+    implementation(libs.kotlinx.collections.immutable)
 
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)

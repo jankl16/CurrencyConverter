@@ -39,17 +39,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.kaleiczyk.feature_converting.R
-import com.kaleiczyk.feature_converting.model.CountryTile
-import com.kaleiczyk.feature_converting.model.CurrencyTile
 import com.kaleiczyk.theme.Black
 import com.kaleiczyk.theme.Error
+import com.kaleiczyk.theme.Grey
 import com.kaleiczyk.theme.LightGrey
 import com.kaleiczyk.theme.LightGreyText
 import com.kaleiczyk.theme.Shadow
 import com.kaleiczyk.theme.Transparent
 import com.kaleiczyk.theme.White
 import com.kaleiczyk.theme.dropShadow
+import com.kaleiczyk.theme.model.CountryTile
+import com.kaleiczyk.theme.model.CurrencyTile
 
 @Composable
 internal fun CurrencyConvertingForm(
@@ -129,17 +131,28 @@ private fun CurrencyConvertingForm(
     val borderRadius = 16.dp
     val shape = RoundedCornerShape(corner = CornerSize(borderRadius))
 
-    Column(
-        modifier = modifier
+    ConstraintLayout(modifier = modifier) {
+        val (fromBox, toBox, background) = createRefs()
+
+        Box(modifier = Modifier
+            .constrainAs(background) {
+                linkTo(
+                    start = parent.start,
+                    end = parent.end,
+                    top = parent.top,
+                    bottom = parent.bottom,
+                )
+                height = Dimension.fillToConstraints
+            }
             .clip(shape = shape)
             .border(0.dp, Transparent, shape)
             .fillMaxWidth()
-            .background(LightGrey),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+            .background(LightGrey)
+        )
+
         Surface(
             modifier = Modifier
+                .fillMaxWidth()
                 .dropShadow(
                     color = Shadow,
                     shape = shape,
@@ -147,7 +160,14 @@ private fun CurrencyConvertingForm(
                     offsetX = 0.dp,
                     blur = 16.dp
                 )
-                .fillMaxWidth(),
+                .constrainAs(fromBox) {
+                    linkTo(
+                        start = parent.start,
+                        end = parent.end,
+                        top = parent.top,
+                        bottom = toBox.top
+                    )
+                },
             color = White,
             border = BorderStroke(
                 2.dp,
@@ -186,7 +206,16 @@ private fun CurrencyConvertingForm(
                 },
             )
         }
+
         Carcass(
+            modifier = Modifier.constrainAs(toBox) {
+                linkTo(
+                    start = parent.start,
+                    end = parent.end,
+                    top = fromBox.bottom,
+                    bottom = parent.bottom
+                )
+            },
             title = stringResource(id = R.string.currency_converting_form_to_title),
             country = to,
             onCountryTapAction = onToCountryTapAction,
@@ -207,13 +236,14 @@ private fun CurrencyConvertingForm(
 
 @Composable
 private fun Carcass(
+    modifier: Modifier = Modifier,
     title: String,
     country: CountryTile,
     onCountryTapAction: () -> Unit,
     textContent: @Composable () -> Unit,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -248,12 +278,16 @@ private fun CountrySelector(
             Spacer(Modifier.width(8.dp))
             Text(
                 text = stringResource(id = country.currency.abbreviation),
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.W700)
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.W700,
+                    color = Black
+                )
             )
             Spacer(Modifier.width(4.dp))
             Icon(
                 modifier = Modifier.size(16.dp),
                 painter = painterResource(R.drawable.ic_chevron_down),
+                tint = Grey,
                 contentDescription = null,
             )
         }
