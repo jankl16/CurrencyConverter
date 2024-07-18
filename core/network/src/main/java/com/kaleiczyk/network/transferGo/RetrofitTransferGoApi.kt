@@ -6,7 +6,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface RetrofitTransferGoApi {
+internal interface RetrofitTransferGoApi {
     @GET("fx-rates")
     suspend fun convertCurrency(
         @Query("from") from: CurrencyDTO,

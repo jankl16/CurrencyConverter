@@ -50,4 +50,5 @@ dependencies {
     kapt(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
+    testImplementation (libs.kotlinx.coroutines.test)
 }

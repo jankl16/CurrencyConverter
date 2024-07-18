@@ -45,7 +45,7 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitTransferGoApi(retrofit: Retrofit): RetrofitTransferGoApi {
+    internal fun provideRetrofitTransferGoApi(retrofit: Retrofit): RetrofitTransferGoApi {
         return retrofit.create<RetrofitTransferGoApi>()
     }
 }
