@@ -1,5 +1,8 @@
 package com.kaleiczyk.domain
 
+import com.kaleiczyk.domain.errorProvider.GlobalErrorProvider
+import com.kaleiczyk.domain.model.GlobalError
+import com.kaleiczyk.domain.model.Result
 import com.kaleiczyk.model.Currency
 import com.kaleiczyk.model.CurrencyConvertResult
 import com.kaleiczyk.model.RequestResult
@@ -8,6 +11,7 @@ import javax.inject.Inject
 
 class ConvertCurrencyUseCase @Inject constructor(
     private val api: TransferGoApi,
+    private val globalErrorProvider: GlobalErrorProvider
 ) {
 
     suspend operator fun invoke(
@@ -22,10 +26,11 @@ class ConvertCurrencyUseCase @Inject constructor(
             is RequestResult.Success -> Result.Success(result.data)
             is RequestResult.Error -> when (result) {
                 is RequestResult.Error.ServerError, is RequestResult.Error.Network, is RequestResult.Error.UnknownHttp -> {
-                    TODO("SEND TO GLOBAL ERROR")
+                    globalErrorProvider.provideError(GlobalError(result.title, result.message))
+                    return Result.Nothing()
                 }
 
-                else -> Result.Error(result.message)
+                is RequestResult.Error.LocalError -> Result.Error(message = result.message)
             }
         }
     }

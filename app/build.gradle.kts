@@ -55,6 +55,7 @@ android {
 dependencies {
     implementation(project(":feature:converting"))
     implementation(project(":theme"))
+    implementation(project(":core:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -13,11 +13,11 @@ inline fun <T, R> sendRetrofitRequest(
         return when (this) {
             is RequestResult.Success -> RequestResult.Success(mapper(data), code)
             is RequestResult.Error.Network -> RequestResult.Error.Network()
-            is RequestResult.Error.Global -> RequestResult.Error.Global(message, code, exception)
             is RequestResult.Error.LocalError -> RequestResult.Error.LocalError(
-                message,
-                code,
-                exception
+                message = message,
+                code = code,
+                title = title,
+                exception = exception
             )
 
             is RequestResult.Error.ServerError -> RequestResult.Error.ServerError(message, code)

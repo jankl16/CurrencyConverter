@@ -11,10 +11,8 @@ class GetCountriesUseCase @Inject constructor() {
         } else {
             Country.entries.toTypedArray()
                 .filter {
-                    it.name.startsWith(
-                        query,
-                        ignoreCase = true
-                    ) || it.currency.code.startsWith(query, ignoreCase = true)
+                    it.name.startsWith(query, ignoreCase = true)
+                            || it.currency.code.startsWith(query, ignoreCase = true)
                 }
         }
     }

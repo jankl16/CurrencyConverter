@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaleiczyk.country_selector.CountrySelectorType
 import com.kaleiczyk.domain.ConvertCurrencyUseCase
-import com.kaleiczyk.domain.Result
+import com.kaleiczyk.domain.model.Result
 import com.kaleiczyk.model.utils.isValidAmount
 import com.kaleiczyk.model.utils.roundToTwoDecimals
 import com.kaleiczyk.theme.model.CountryTile
@@ -89,7 +89,15 @@ internal class CurrencyConvertingViewModel @Inject constructor(
         from: CountryTile = state.value.from,
         to: CountryTile = state.value.to
     ) = viewModelScope.launch(Dispatchers.Main) {
-        _state.update { it.copy(from = from, to = to, toAmount = null, convertingRate = null) }
+        _state.update {
+            it.copy(
+                from = from,
+                to = to,
+                toAmount = null,
+                convertingRate = null,
+                errorMessage = null
+            )
+        }
 
         val result = withContext(Dispatchers.IO) {
             with(state.value) {
@@ -110,6 +118,7 @@ internal class CurrencyConvertingViewModel @Inject constructor(
                 )
 
                 is Result.Error -> it.copy(errorMessage = result.message)
+                is Result.Nothing -> it
             }
         }
     }

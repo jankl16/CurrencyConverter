@@ -7,31 +7,32 @@ sealed class RequestResult<T>(val code: Int) {
     sealed class Error<T>(
         code: Int,
         val message: String,
+        val title: String,
         val exception: Exception?,
     ) : RequestResult<T>(code) {
-
-        class Global<T>(
-            message: String,
-            code: Int,
-            exception: Exception? = null,
-        ) : Error<T>(code, message, exception = exception)
 
         class ServerError<T>(
             message: String,
             code: Int,
-        ) : Error<T>(code, message, null)
+        ) : Error<T>(code, message, title = "Server Error", null)
 
         class LocalError<T>(
             message: String,
             code: Int,
+            title: String = "",
             exception: Exception? = null,
-        ) : Error<T>(code, message, exception)
+        ) : Error<T>(code, message, title, exception)
 
-        class Network<T> : Error<T>(code = -1, message = "", exception = null)
+        class Network<T> : Error<T>(
+            code = -1,
+            title = "No network",
+            message = "Check your internet connection",
+            exception = null
+        )
 
         class UnknownHttp<T>(
             message: String,
             code: Int
-        ) : Error<T>(code, message, null)
+        ) : Error<T>(code, message, title = "Unknown Error", null)
     }
 }

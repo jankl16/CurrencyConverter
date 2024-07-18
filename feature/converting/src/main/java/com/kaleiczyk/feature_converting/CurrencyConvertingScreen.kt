@@ -107,7 +107,7 @@ private fun CurrencyConvertingScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 88.dp)
+            .padding(vertical = 48.dp)
     ) {
         Column(
             modifier = Modifier
